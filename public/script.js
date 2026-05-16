@@ -547,29 +547,69 @@ function calculateBdayPrice() {
 }
 
 function addBirthdayToCart() {
-    if (!bdayCakes[selectedFlavor]) return; // Wait until loaded
-const basePrices = {
-    "0.5": 450,
-    "1.0": 850,
-    "1.5": 1250,
-    "2.0": 1600
-};
+    // Fallback data in case API fails to load
+    const fallbacks = {
+        'Red Velvet': { img: 'https://theobroma.in/cdn/shop/files/redvelvet-theo.jpg?v=1701321860', emoji: '🎂' },
+        'Dutch Truffle': { img: 'https://tse2.mm.bing.net/th/id/OIP.RFIPPxLpOU7C0ryaVA5hMwHaHa?pid=Api&P=0&h=180', emoji: '🍰' },
+        'Pineapple': { img: 'https://theobroma.in/cdn/shop/files/FreshCreamPineappleCakehalfkg_400x400.jpg?v=1711124785', emoji: '🍍' },
+        'Chocoholic': { img: 'https://theobroma.in/cdn/shop/files/ChocoholicPastry_400x400.jpg?v=1711096267', emoji: '🍫' },
+        'Black Forest': { img: 'https://sweetandsavorymeals.com/wp-content/uploads/2020/02/black-forest-cake-recipe-SweetAndSavoryMeals4-1054x1536.jpg', emoji: '🌲' },
+        'Cheesecake': { img: 'https://www.inspiredtaste.net/wp-content/uploads/2024/03/New-York-Cheesecake-Recipe-1.jpg', emoji: '🧀' }
+    };
 
-const finalPrice = basePrices[selectedWeight];    const msgInput = document.getElementById('cakeMessage');
+    const cakeInfo = bdayCakes[selectedFlavor] || fallbacks[selectedFlavor] || fallbacks['Red Velvet'];
+    
+    const basePrices = {
+        "0.5": 450,
+        "1.0": 850,
+        "1.5": 1250,
+        "2.0": 1600
+    };
+    
+    const finalPrice = basePrices[selectedWeight] || 850;
+    const msgInput = document.getElementById('cakeMessage');
     const message = msgInput ? msgInput.value.trim() : '';
 
     const item = {
         id: `bday-${selectedFlavor}-${selectedWeight}`,
         name: `${selectedFlavor} Cake (${selectedWeight}kg)`,
         price: Math.round(finalPrice),
-        img: bdayCakes[selectedFlavor].img,
-        emoji: bdayCakes[selectedFlavor].emoji,
+        img: cakeInfo.img,
+        emoji: cakeInfo.emoji,
         category: "cakes",
         message: message,
         qty: 1
     };
     addToCart(item);
     if (msgInput) msgInput.value = '';
+    openCart();
+}
+
+function addDessertToCart() {
+    const item = {
+        id: "dessert-macarons",
+        name: "Assorted Macarons (Box of 4)",
+        price: 350,
+        img: "https://theobroma.in/cdn/shop/files/Delicacies-04.jpg?v=1681320427",
+        emoji: "🍮",
+        category: "desserts",
+        qty: 1
+    };
+    addToCart(item);
+    openCart();
+}
+
+function addBrownieToCart() {
+    const item = {
+        id: "brownie-overload",
+        name: "Overload Brownie (Pack of 4)",
+        price: 250,
+        img: "https://theobroma.in/cdn/shop/files/OverloadBrownie_400x400.jpg?v=1711183338",
+        emoji: "🍫",
+        category: "brownies",
+        qty: 1
+    };
+    addToCart(item);
     openCart();
 }
 
