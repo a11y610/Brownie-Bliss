@@ -135,9 +135,11 @@ msg91.sendOTP(phone, otp);
 ---
 
 ## 🔐 Admin Security (Production)
-Currently the admin panel has no password. For production, add:
-1. A simple password prompt in `admin.html`
-2. Or JWT authentication via Express middleware
+Admin authentication now uses secure JWT-based server-side authentication with credentials stored in environment variables.
+
+To set up the admin panel:
+1. Ensure `.env` is configured with `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `ADMIN_JWT_SECRET`.
+2. Access `/admin-login.html` to log in securely.
 
 ---
 

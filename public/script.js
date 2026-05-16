@@ -2,6 +2,20 @@
 
 const API_BASE = '/api';
 
+// --- THEME ---
+function applyTheme(theme) {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    const icon = document.getElementById('themeIcon');
+    if (icon) icon.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
+}
+
+function toggleTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    const next = isDark ? 'light' : 'dark';
+    localStorage.setItem('bb_theme', next);
+    applyTheme(next);
+}
+
 // --- PRODUCTS DATA ---
 let products = [];
 let bdayCakes = {};
@@ -487,7 +501,7 @@ function updateBirthdayCake(flavor) {
     }
 
     // Update active flavor button
-    document.querySelectorAll('.flavor-btn').forEach(btn => {
+    document.querySelectorAll('.filter-pill').forEach(btn => {
         btn.classList.remove('active');
 
         if (btn.textContent.trim() === flavor) {
@@ -498,25 +512,52 @@ function updateBirthdayCake(flavor) {
     calculateBdayPrice();
 }
 function setCakeWeight(weight) {
+
     selectedWeight = weight;
+
+    const weightButtons = document.querySelectorAll(
+        'button[onclick^="setCakeWeight"]'
+    );
+
+    weightButtons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+
     if (event && event.target) {
-        event.target.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
         event.target.classList.add('active');
     }
+
     calculateBdayPrice();
 }
 
 function calculateBdayPrice() {
-    if (!bdayCakes[selectedFlavor]) return; // Wait until loaded
-    const finalPrice = bdayCakes[selectedFlavor].price * parseFloat(selectedWeight);
+
+    const basePrices = {
+        "0.5": 450,
+        "1.0": 850,
+        "1.5": 1250,
+        "2.0": 1600
+    };
+
+    const finalPrice = basePrices[selectedWeight];
+
     const priceEl = document.getElementById('cakePrice');
-    if (priceEl) priceEl.textContent = `₹ ${Math.round(finalPrice)}`;
+
+    if (priceEl) {
+        priceEl.textContent = `₹ ${finalPrice}`;
+    }
 }
 
 function addBirthdayToCart() {
     if (!bdayCakes[selectedFlavor]) return; // Wait until loaded
-    const finalPrice = bdayCakes[selectedFlavor].price * parseFloat(selectedWeight);
-    const msgInput = document.getElementById('cakeMessage');
+const basePrices = {
+    "0.5": 450,
+    "1.0": 850,
+    "1.5": 1250,
+    "2.0": 1600
+};
+
+const finalPrice = basePrices[selectedWeight];    const msgInput = document.getElementById('cakeMessage');
     const message = msgInput ? msgInput.value.trim() : '';
 
     const item = {
@@ -545,6 +586,9 @@ function showToast(msg) {
 
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
+    // Sync toggle icon with current theme (class was set by blocking <script> in <head>)
+    applyTheme(localStorage.getItem('bb_theme') || 'light');
+
     updateCartUI();
     loadProducts(); // Load and then automatically re-render main grid/birthday block
 
