@@ -1,17 +1,16 @@
 const mongoose = require('mongoose');
-const { seedProducts } = require('../models/Product');
 
 mongoose.set('bufferCommands', false);
 
 let isConnected = false;
 
 async function connectDB() {
-  if (isConnected && mongoose.connection.readyState === 1) return;
-
   const MONGO_URI = process.env.MONGO_URI;
   if (!MONGO_URI) {
-    throw new Error('MONGO_URI environment variable is not set');
+    return; // Run in memory/static mode
   }
+
+  if (isConnected && mongoose.connection.readyState === 1) return;
 
   try {
     await mongoose.connect(MONGO_URI, {
@@ -21,7 +20,8 @@ async function connectDB() {
     });
     isConnected = true;
     console.log('✅ Connected to MongoDB');
-    await seedProducts();
+    const Product = require('../models/Product');
+    await Product.seedProducts();
   } catch (err) {
     isConnected = false;
     console.error('❌ MongoDB connection error:', err.message);
@@ -29,4 +29,8 @@ async function connectDB() {
   }
 }
 
-module.exports = connectDB;
+function isDbReady() {
+  return Boolean(process.env.MONGO_URI) && mongoose.connection.readyState === 1;
+}
+
+module.exports = { connectDB, isDbReady };
