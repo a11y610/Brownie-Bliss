@@ -8907,7 +8907,7 @@ a.logo {
  .some-class {
   color: var(--brown-dark) !important;
 }
-
+}
 html.dark {
   --cream: #1a1008;
   --cream-dark: #221508;
@@ -9933,7 +9933,7 @@ html.dark .topping-price {
     0 0 0 4px rgba(181, 131, 102, 0.18);
 }
 }
-}
+
 .custom-price-filter {
   appearance: none !important;
   background-color: #fff4ec !important;
@@ -9968,7 +9968,7 @@ background-position: right 16px center;
   font-family: 'Playfair Display', serif !important;
   color: #5c372c !important;
 }
-
+    
 #scrollTopBtn {
     position: fixed;
     bottom: 20px;
