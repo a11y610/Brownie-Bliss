@@ -347,7 +347,7 @@
               ${p.desc ? `<div class="product-desc">${p.desc}</div>` : ''}
               ${(p.dummyShop || p.location) ? `<div class="product-desc">${p.dummyShop || ''}${p.dummyShop && p.location ? ' • ' : ''}${p.location || ''}</div>` : ''}
               <div class="product-price">₹${p.price}</div>
-              <button class="add-to-cart-btn" onclick="addToCartFromProducts(${p.id}, '${String(p.name).replace(/'/g, "\\'")}', ${p.price})">Add to Cart 🛒</button>
+              <button class="add-to-cart-btn" onclick='addToCartFromProducts(${p.id}, ${JSON.stringify(p.name)}, ${p.price})'>Add to Cart 🛒</button>
             </div>
           </div>
         `).join('');
